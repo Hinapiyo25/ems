@@ -1,0 +1,35 @@
+# Render blueprint — free web service that gives a permanent https:// URL.
+#
+# 1. Push this project to GitHub.
+# 2. Render dashboard -> New + -> Blueprint -> pick the repository.
+# 3. Render reads this file and creates the service.
+#
+# SQLite lives on the ephemeral filesystem of the free plan, so the demo data
+# is re-created on every deploy (the start command runs `python seed.py`, which
+# is idempotent). For persistent data attach a paid disk and add:
+#
+#   disk:
+#     name: ems-data
+#     mountPath: /var/data
+#     sizeGB: 1
+#
+# ...and set EMS_SQLITE_PATH=/var/data/ems.sqlite3 below.
+
+services:
+  - type: web
+    name: ems
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: sh -c "python seed.py && gunicorn wsgi:application --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 60"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+      - key: EMS_SECRET_KEY
+        generateValue: true
+      - key: EMS_DATABASE
+        value: "sqlite"
+      - key: EMS_ALLOW_REGISTRATION
+        value: "1"
+      - key: EMS_DEBUG
+        value: "0"

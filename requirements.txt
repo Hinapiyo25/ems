@@ -1,0 +1,21 @@
+# Python dependencies for the EMS prototype (Meítǐ Shāngchéng, Group 8).
+# Install with:  pip install -r requirements.txt
+#
+# Compatible-release pins: they install on Python 3.10-3.12 without compilation.
+
+Flask>=3.0,<4.0
+Flask-SQLAlchemy>=3.1,<4.0
+SQLAlchemy>=2.0,<3.0
+Werkzeug>=3.0,<4.0
+python-dotenv>=1.0
+
+# MySQL driver — only needed when EMS_DATABASE=mysql is used.
+# The prototype runs on SQLite out of the box.
+PyMySQL>=1.1
+
+# Production WSGI server used by the hosting platforms (Linux only;
+# local development on Windows uses the Flask dev server instead).
+gunicorn>=21.2
+
+# Test suite (pytest.ini in the project root).
+pytest>=8.0
